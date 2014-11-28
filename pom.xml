@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.kiguruming.android</groupId>
+	<artifactId>android-join-cursor-parent</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Android JoinCursor Parent</name>
+	<description>This is a library that join cursor with external key.</description>
+	<url>https://github.com/takahr/android-join-cursor</url>
+	<inceptionYear>2014</inceptionYear>
+
+	<modules>
+		<module>android-join-cursor-library</module>
+		<module>android-join-cursor-example</module>
+	</modules>
+
+	<scm>
+		<url>https://github.com/takahr/android-join-cursor</url>
+		<connection>scm:git:git://github.com/takahr/android-join-cursor.git</connection>
+		<developerConnection>scm:git:git@github.com:takahr/android-join-cursor.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>takahr</id>
+			<name>HIDAKA Takahiro</name>
+			<email>takahr@gmail.com</email>
+			<url>https://github.com/takahr</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+9</timezone>
+		</developer>
+	</developers>
+
+	<contributors>
+	</contributors>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>kiguruming.com</name>
+		<url>https://github.com/kiguruming</url>
+	</organization>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/takahr/android-join-cursor/issues</url>
+	</issueManagement>
+
+	<distributionManagement>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>android-support</id>
+			<url>file://${env.ANDROID_HOME}/extras/android/m2repository</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>oss.sonatype.org-jayway-snapshots</id>
+			<name>Jayway OpenSource SNAPSHOTs on Sonatype.org</name>
+			<url>http://oss.sonatype.org/content/repositories/jayway-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<properties>
+		<!-- infomation -->
+		<root.basedir>${project.basedir}</root.basedir>
+
+		<!-- encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<java.version>1.6</java.version>
+
+		<!-- Compilation dependencies, build.gradle -->
+		<android-sdk.version>19</android-sdk.version>
+		<android-buildtools.version>19.0.3</android-buildtools.version>
+		<android.version>4.4.2_r4</android.version>
+		<android-support.version>19.1.0</android-support.version>
+
+		<!-- AndroidManifest -->
+		<android-min-sdk.version>7</android-min-sdk.version>
+		<android-target-sdk.version>19</android-target-sdk.version>
+
+		<!-- plugins -->
+		<eclipse-lifecycle-plugin.version>1.0.0</eclipse-lifecycle-plugin.version>
+		<maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
+		<maven-release-plugin.version>2.4.1</maven-release-plugin.version>
+
+		<android-maven-plugin.version>3.9.0-rc.3</android-maven-plugin.version>
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+		<maven-processor-plugin.version>2.2.4</maven-processor-plugin.version>
+		<build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
+		<maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
+
+		<versions-maven-plugin.version>2.1</versions-maven-plugin.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.android</groupId>
+				<artifactId>android</artifactId>
+				<version>${android.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.android</groupId>
+				<artifactId>android-test</artifactId>
+				<version>${android.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.android.support</groupId>
+				<artifactId>support-v4</artifactId>
+				<version>${android-support.version}</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<fork>true</fork>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<showWarnings>true</showWarnings>
+						<compilerArguments>
+							<Xlint />
+						</compilerArguments>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.bsc.maven</groupId>
+					<artifactId>maven-processor-plugin</artifactId>
+					<version>${maven-processor-plugin.version}</version>
+					<configuration>
+						<compilerArguments>-encoding ${project.build.sourceEncoding}</compilerArguments>
+					</configuration>
+				</plugin>
+
+				<!-- Android config -->
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>${android-maven-plugin.version}</version>
+					<configuration>
+						<nativeLibrariesDirectory>ignored</nativeLibrariesDirectory>
+						<sdk>
+							<platform>${android-sdk.version}</platform>
+						</sdk>
+						<undeployBeforeDeploy>false</undeployBeforeDeploy>
+						<dex>
+							<jvmArguments>
+								<jvmArgument>-Xmx1024m</jvmArgument>
+								<jvmArgument>-XX:MaxPermSize=256m</jvmArgument>
+							</jvmArguments>
+						</dex>
+					</configuration>
+					<extensions>true</extensions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>${versions-maven-plugin.version}</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+	</build>
+
+</project>
