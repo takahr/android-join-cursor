@@ -2,8 +2,6 @@ package com.kiguruming.android.joincursor;
 
 import android.database.Cursor;
 
-import java.util.Arrays;
-
 /**
  * JoinCursor for sorted Cursors.
  *

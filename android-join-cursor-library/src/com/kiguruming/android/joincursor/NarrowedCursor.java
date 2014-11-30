@@ -1,7 +1,6 @@
 package com.kiguruming.android.joincursor;
 
 import android.database.Cursor;
-import android.database.CursorWrapper;
 
 /**
  * Cursor windowed from position and count.
