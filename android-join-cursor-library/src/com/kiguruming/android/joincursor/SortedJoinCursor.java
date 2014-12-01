@@ -21,7 +21,7 @@ public class SortedJoinCursor extends ReferenceCursor {
      * @param parentCursor The wrapped parent Cursor..
      * @param childrenCursor The referencing children Cursor..
      */
-    public SortedJoinCursor(Cursor parentCursor, int parentKeyColumn, Cursor childrenCursor, int childKeyColumn) {
+    public SortedJoinCursor(Cursor parentCursor, int parentKeyColumn, Cursor childrenCursor, int childKeyColumn, int keyType) {
         super(parentCursor);
 
         if (childrenCursor instanceof ReferencedCursor) {
@@ -32,7 +32,7 @@ public class SortedJoinCursor extends ReferenceCursor {
 
         mParentKeyColumn = parentKeyColumn;
         mChildKeyColumn = childKeyColumn;
-        mKeyType = getType(parentKeyColumn);
+        mKeyType = keyType;
 
         mChildOffsets = new int[getCount()];
         updateChildOffsetList();
