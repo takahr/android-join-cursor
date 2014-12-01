@@ -35,33 +35,57 @@ public class SortedJoinCursor extends ReferenceCursor {
         mKeyType = keyType;
 
         mChildOffsets = new int[getCount()];
-        updateChildOffsetList();
+        updateChildOffsets();
     }
 
-    protected void updateChildOffsetList() {
-        final int count = getCount();
-
+    protected void updateChildOffsets() {
         switch (mKeyType) {
             case Cursor.FIELD_TYPE_INTEGER:
-                mChildrenCursor.moveToFirst();
-                int childrenOffset = -1;
-                for (int i = 0; i < count; i++) {
-                    moveToPosition(i);
-                    final int parentKey = getInt(mParentKeyColumn);
-                    do {
-                        final int childKey = mChildrenCursor.getInt(mChildKeyColumn);
-                        if (parentKey != childKey) {
-                            break;
-                        }
-                        childrenOffset++;
-                    } while (mChildrenCursor.moveToNext());
-                    mChildOffsets[i] = childrenOffset;
-                }
+				updateChildOffsetsForIntKey();
                 break;
+			case Cursor.FIELD_TYPE_STRING:
+				updateChildOffsetsForStringKey();
+				break;
             default:
                 throw new UnsupportedOperationException();
         }
     }
+
+	protected void updateChildOffsetsForIntKey() {
+		final int count = getCount();
+		mChildrenCursor.moveToFirst();
+		int childrenOffset = -1;
+		for (int i = 0; i < count; i++) {
+			moveToPosition(i);
+			final int parentKey = getInt(mParentKeyColumn);
+			do {
+				final int childKey = mChildrenCursor.getInt(mChildKeyColumn);
+				if (parentKey != childKey) {
+					break;
+				}
+				childrenOffset++;
+			} while (mChildrenCursor.moveToNext());
+			mChildOffsets[i] = childrenOffset;
+		}
+	}
+
+	protected void updateChildOffsetsForStringKey() {
+		final int count = getCount();
+		mChildrenCursor.moveToFirst();
+		int childrenOffset = -1;
+		for (int i = 0; i < count; i++) {
+			moveToPosition(i);
+			final String parentKey = getString(mParentKeyColumn);
+			do {
+				final String childKey = mChildrenCursor.getString(mChildKeyColumn);
+				if (!parentKey.equals(childKey)) {
+					break;
+				}
+				childrenOffset++;
+			} while (mChildrenCursor.moveToNext());
+			mChildOffsets[i] = childrenOffset;
+		}
+	}
 
     public Cursor getJoinedChildrenCursor() {
         final int parentPosition = getPosition();
