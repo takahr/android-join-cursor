@@ -13,7 +13,19 @@ public class SortedJoinCursor extends ReferenceCursor {
     private final int mChildKeyColumn;
     private final int mKeyType;
 
-    private final int[] mChildOffsets;
+	static class ChildInfo {
+		int position;
+		int count;
+
+		ChildInfo(int position, int count) {
+			this.position = position;
+			this.count = count;
+		}
+
+		ChildInfo() {
+		}
+	}
+    private final ChildInfo[] mChildInfos;
 
     /**
      * Creates a joined cursor..
@@ -34,7 +46,7 @@ public class SortedJoinCursor extends ReferenceCursor {
         mChildKeyColumn = childKeyColumn;
         mKeyType = keyType;
 
-        mChildOffsets = new int[getCount()];
+        mChildInfos = new ChildInfo[getCount()];
         updateChildOffsets();
     }
 
@@ -58,14 +70,16 @@ public class SortedJoinCursor extends ReferenceCursor {
 		for (int i = 0; i < count; i++) {
 			moveToPosition(i);
 			final int parentKey = getInt(mParentKeyColumn);
+			int childrenCount = 0;
 			do {
 				final int childKey = mChildrenCursor.getInt(mChildKeyColumn);
 				if (parentKey != childKey) {
 					break;
 				}
 				childrenOffset++;
+				childrenCount++;
 			} while (mChildrenCursor.moveToNext());
-			mChildOffsets[i] = childrenOffset;
+			mChildInfos[i] = new ChildInfo(childrenOffset, childrenCount);
 		}
 	}
 
@@ -76,28 +90,23 @@ public class SortedJoinCursor extends ReferenceCursor {
 		for (int i = 0; i < count; i++) {
 			moveToPosition(i);
 			final String parentKey = getString(mParentKeyColumn);
+			int childrenCount = 0;
 			do {
 				final String childKey = mChildrenCursor.getString(mChildKeyColumn);
 				if (!parentKey.equals(childKey)) {
 					break;
 				}
 				childrenOffset++;
+				childrenCount++;
 			} while (mChildrenCursor.moveToNext());
-			mChildOffsets[i] = childrenOffset;
+			mChildInfos[i] = new ChildInfo(childrenOffset, childrenCount);
 		}
 	}
 
     public Cursor getJoinedChildrenCursor() {
         final int parentPosition = getPosition();
-        final int childPosition;
-        final int childCount;
-        if (parentPosition > 0) {
-            childPosition = mChildOffsets[parentPosition - 1];
-            childCount = mChildOffsets[parentPosition] - childPosition;
-        } else {
-            childPosition = 0;
-            childCount = mChildOffsets[0];
-        }
+        final int childPosition = mChildInfos[parentPosition].position;
+        final int childCount = mChildInfos[parentPosition].count;
 
         return new NarrowedCursor(mChildrenCursor, childPosition, childCount);
     }
