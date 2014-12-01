@@ -37,12 +37,12 @@ public class NarrowedCursor extends ReferenceCursor {
 
     @Override
     public boolean moveToFirst() {
-        return moveToPosition(mFrom);
+        return super.moveToPosition(mFrom);
     }
 
     @Override
     public boolean moveToLast() {
-        return moveToPosition(mFrom + mCount - 1);
+        return super.moveToPosition(mFrom + mCount - 1);
     }
 
 }
