@@ -71,14 +71,16 @@ public class SortedJoinCursor extends ReferenceCursor {
 			moveToPosition(i);
 			final int parentKey = getInt(mParentKeyColumn);
 			int childrenCount = 0;
-			do {
-				final int childKey = mChildrenCursor.getInt(mChildKeyColumn);
-				if (parentKey != childKey) {
-					break;
-				}
-				childrenOffset++;
-				childrenCount++;
-			} while (mChildrenCursor.moveToNext());
+			if (!mChildrenCursor.isAfterLast() && !mChildrenCursor.isBeforeFirst()) {
+				do {
+					final int childKey = mChildrenCursor.getInt(mChildKeyColumn);
+					if (parentKey != childKey) {
+						break;
+					}
+					childrenOffset++;
+					childrenCount++;
+				} while (mChildrenCursor.moveToNext());
+			}
 			mChildInfos[i] = new ChildInfo(childrenOffset, childrenCount);
 		}
 	}
@@ -91,14 +93,16 @@ public class SortedJoinCursor extends ReferenceCursor {
 			moveToPosition(i);
 			final String parentKey = getString(mParentKeyColumn);
 			int childrenCount = 0;
-			do {
-				final String childKey = mChildrenCursor.getString(mChildKeyColumn);
-				if (!parentKey.equals(childKey)) {
-					break;
-				}
-				childrenOffset++;
-				childrenCount++;
-			} while (mChildrenCursor.moveToNext());
+			if (!mChildrenCursor.isAfterLast() && !mChildrenCursor.isBeforeFirst()) {
+				do {
+					final String childKey = mChildrenCursor.getString(mChildKeyColumn);
+					if (!parentKey.equals(childKey)) {
+						break;
+					}
+					childrenOffset++;
+					childrenCount++;
+				} while (mChildrenCursor.moveToNext());
+			}
 			mChildInfos[i] = new ChildInfo(childrenOffset, childrenCount);
 		}
 	}
